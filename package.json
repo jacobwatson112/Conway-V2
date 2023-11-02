@@ -6,6 +6,10 @@
 	"author": "Jacob Watson",
 	"license": "MIT",
 	"type": "module",
+  "scripts": {
+    "start": "node .",
+    "deploy-commands": "node ./deploy-commands.js"
+  },
 	"dependencies": {
 		"common-es": "^1.0.1",
 		"discord.js": "^14.13.0",

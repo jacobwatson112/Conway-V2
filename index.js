@@ -1,8 +1,6 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
-
-import { execute as ip } from './commands/server/ip.js'
-import { execute as ping } from './commands/test/ping.js'
+import { commands } from './commands/commands.js'
 
 dotenv.config()
 
@@ -14,11 +12,6 @@ const client = new Client({
         GatewayIntentBits.DirectMessages
     ]
 })
-
-const commands = {
-	ip,
-	ping, 
-}
 
 client.on('ready', (event) => {
     console.log('Anyone here got a knife?')

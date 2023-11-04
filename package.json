@@ -1,6 +1,6 @@
 {
 	"name": "Conway v2",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Conway reborn",
 	"main": "index.js",
 	"author": "Jacob Watson",
@@ -11,6 +11,7 @@
 		"deploy-commands": "node ./deploy-commands.js"
 	},
 	"dependencies": {
+		"chatgpt": "^5.2.5",
 		"discord.js": "^14.13.0",
 		"dotenv": "^16.3.1",
 		"luxon": "^3.4.3",

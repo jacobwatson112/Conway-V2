@@ -4,6 +4,8 @@ import { commands } from './src/commands/commands.js'
 import usersJSON from "./src/json/users.json" assert { type: 'json'}
 import { getBirthdayMessage, getBirthdays } from './src/helpers/birthday-helper.js'
 import { setActivity } from './src/helpers/activity-helper.js'
+import { queryOpenAi, queryOpenAiFollowup } from './src/helpers/openai-helper.js'
+import { getUser } from './src/helpers/user-helper.js'
 
 dotenv.config()
 
@@ -12,9 +14,13 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.DirectMessages
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.MessageContent,
     ]
 })
+
+let lastMessage
 
 client.on('ready', (event) => {
     console.log('Anyone here got a knife?')
@@ -33,7 +39,14 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on('messageCreate', async (message) => {
-    //console.log(message)
+    const user = getUser(usersJSON.users, message.author.id)
+    if (user) {
+        if (lastMessage) {
+            lastMessage = queryOpenAiFollowup(process.env.OPENAI_API_KEY, client, message, user, lastMessage)
+        } else {
+            lastMessage = queryOpenAi(process.env.OPENAI_API_KEY, client, message, user)
+        }
+    }
 })
 
 client.login(process.env.DISCORD_TOKEN)

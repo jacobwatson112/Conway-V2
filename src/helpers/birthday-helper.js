@@ -10,6 +10,6 @@ export function getBirthdays(users) {
     return
 }
 
-export function getBirthdayMessage(user) {
+export function getBirthdayStatus(user) {
     return "Happy Birthday " + user.firstName
 }

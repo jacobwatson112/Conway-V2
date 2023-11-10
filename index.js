@@ -4,7 +4,7 @@ import { commands } from './src/commands/commands.js'
 import usersJSON from "./src/json/users.json" assert { type: 'json'}
 import { getBirthdayStatus, getBirthdays } from './src/helpers/birthday-helper.js'
 import { setActivity } from './src/helpers/activity-helper.js'
-import { queryOpenAi, queryOpenAiFollowup } from './src/helpers/openai-helper.js'
+import { queryOpenAi } from './src/helpers/openai-helper.js'
 import { getUser } from './src/helpers/user-helper.js'
 import { getChannel } from './src/helpers/channels-helper.js'
 
@@ -46,11 +46,7 @@ client.on('messageCreate', async (message) => {
     const no = Math.floor(Math.random() * channel.odds)
     console.log(no)
     if (user && channel && no === 0) {
-        if (lastMessage) {
-            lastMessage = await queryOpenAiFollowup(process.env.OPENAI_API_KEY, client, message, user, lastMessage)
-        } else {
-            lastMessage = await queryOpenAi(process.env.OPENAI_API_KEY, client, message, user)
-        }
+        lastMessage = await queryOpenAi(process.env.OPENAI_API_KEY, client, message, user, channel, lastMessage)
     }
 })
 

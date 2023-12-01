@@ -2,7 +2,7 @@ import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 import { commands } from './src/commands/commands.js'
 import usersJSON from "./src/json/users.json" assert { type: 'json'}
-import { getBirthdayStatus, getBirthdays } from './src/helpers/birthday-helper.js'
+import { getBirthdayStatus, getBirthdays, writeBirthdayMessage } from './src/helpers/birthday-helper.js'
 import { setActivity } from './src/helpers/activity-helper.js'
 import { queryOpenAi } from './src/helpers/openai-helper.js'
 import { getUser } from './src/helpers/user-helper.js'
@@ -28,8 +28,11 @@ client.on('ready', (event) => {
     const userBirthday = getBirthdays(usersJSON.users)
     console.log(userBirthday)
 
-    userBirthday !== undefined ? setActivity(client, getBirthdayStatus(userBirthday)) : setActivity(client)
+    userBirthday ? setActivity(client, getBirthdayStatus(userBirthday)) : setActivity(client)
 
+    if (userBirthday) {
+        writeBirthdayMessage(process.env.OPENAI_API_KEY, client, userBirthday)
+    }
     //client.user.setActivity('GUESS WHOS BACK BITCHES', { type: ActivityType.Watching });
 })
 
@@ -43,7 +46,7 @@ client.on('messageCreate', async (message) => {
     const user = getUser(usersJSON.users, message.author.id)
     const channel = getChannel(message.channelId)
     console.log(channel)
-    const no = Math.floor(Math.random() * channel.odds)
+    const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
     console.log(no)
     if (user && channel && no === 0) {
         lastMessage = await queryOpenAi(process.env.OPENAI_API_KEY, client, message, user, channel, lastMessage)

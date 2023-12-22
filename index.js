@@ -43,13 +43,17 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on('messageCreate', async (message) => {
-    const user = getUser(usersJSON.users, message.author.id)
-    const channel = getChannel(message.channelId)
-    console.log(channel)
-    const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
-    console.log(no)
-    if (user && channel && no === 0) {
-        lastMessage = await queryOpenAi(process.env.OPENAI_API_KEY, client, message, user, channel, lastMessage)
+    try {
+        const user = getUser(usersJSON.users, message.author.id)
+        const channel = getChannel(message.channelId)
+        console.log(channel)
+        const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
+        console.log(no)
+        if (user && channel && no === 0) {
+            lastMessage = await queryOpenAi(process.env.OPENAI_API_KEY, client, message, user, channel, lastMessage)
+        }
+    } catch (e) {
+        console.log(e)
     }
 })
 

@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction, client) {
     if (isUser(interaction.user.id)) {
         await interaction.reply({ content: 'Shutting down', ephemeral: true });
-        process.exit()
+		process.exit()
 	} else {
 		await replyNoPremission(interaction);
 	}

@@ -1,5 +1,6 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
+import { CronJob } from 'cron'
 import { commands } from './src/commands/commands.js'
 import usersJSON from "./src/json/users.json" assert { type: 'json'}
 import { getBirthdayStatus, getBirthdays, writeBirthdayMessage } from './src/helpers/birthday-helper.js'
@@ -20,6 +21,12 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
     ]
 })
+
+const shutdown = new CronJob('0 50 21 * * *', () => {
+    process.exit()
+});
+
+shutdown.start();
 
 let lastMessage
 

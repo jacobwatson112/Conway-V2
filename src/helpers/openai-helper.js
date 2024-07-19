@@ -1,23 +1,30 @@
-import { ChatGPTAPI } from "chatgpt";
+import OpenAI from "openai";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export async function queryOpenAi(apiKey, client, message, user, channel, lastMessage) {
-    const api = new ChatGPTAPI({
-        apiKey: apiKey,
-    })
+    const openai = new OpenAI({
+        apiKey: apiKey, 
+      });
 
-    const parentMessageId = lastMessage?.id || ""
+    //const parentMessageId = lastMessage?.id || ""
     const userMessage = message.content
     const systemMessage = constructSystemMessage(channel, user)
 
     try {
-        const res = await api.sendMessage(userMessage, 
-            {
-                systemMessage: systemMessage, 
-                parentMessageId: parentMessageId,
-                timeoutMs: 2 * 60 * 1000
-            })
 
-        client.channels.cache.get(message.channelId).send(res.text)
+        const chatCompletion = await openai.chat.completions.create({
+            messages: [
+                { 'role': 'system', 'content': systemMessage },
+                { 'role': 'user', 'content': userMessage },
+            ],
+            model: 'gpt-4o-mini',
+          });
+
+        let res = chatCompletion.choices[0].message.content
+
+        client.channels.cache.get(message.channelId).send(res)
         console.log(res)
         return res
     }
@@ -27,6 +34,27 @@ export async function queryOpenAi(apiKey, client, message, user, channel, lastMe
         if (channel.name === "ok-conway" || channel.name === 'conway-v2-testing') {
             client.channels.cache.get(message.channelId).send("Sorry, somethings gone wrong :smiling_face_with_tear:, give me a minute and try again")
         }
+    }
+}
+
+export async function queryDallE(message) {
+    const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY, 
+      });
+    try {
+
+        const res = await openai.images.generate({
+            model: "dall-e-2",
+            prompt: message,
+            n: 1,
+            size: "1024x1024",
+          });
+
+        return res.data[0].url
+    }
+    catch (e) {
+        console.log('ERROR :(')
+        console.log(e)
     }
 }
 

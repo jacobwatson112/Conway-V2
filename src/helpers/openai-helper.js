@@ -11,16 +11,40 @@ export async function queryOpenAi(apiKey, client, message, user, channel, lastMe
     //const parentMessageId = lastMessage?.id || ""
     const userMessage = message.content
     const systemMessage = constructSystemMessage(channel, user)
+    const messageAttachment = message.attachments.values().next().value.attachment
 
+    console.log(messageAttachment)
     try {
 
-        const chatCompletion = await openai.chat.completions.create({
-            messages: [
-                { 'role': 'system', 'content': systemMessage },
-                { 'role': 'user', 'content': userMessage },
-            ],
-            model: 'gpt-4o-mini',
-          });
+        let chatCompletion
+
+        if (messageAttachment) {
+            chatCompletion = await openai.chat.completions.create({
+                messages: [
+                    { 'role': 'system', 'content': systemMessage },
+                    { 'role': 'user', 'content': [
+                        {
+                            'type': 'text',
+                            'text': userMessage
+                        },
+                        {
+                            'type': 'image_url',
+                            'image_url': {'url': messageAttachment}
+                        }
+                    ]},
+                ],
+                model: 'gpt-4o-mini',
+              });
+
+        } else {
+            chatCompletion = await openai.chat.completions.create({
+                messages: [
+                    { 'role': 'system', 'content': systemMessage },
+                    { 'role': 'user', 'content': userMessage },
+                ],
+                model: 'gpt-4o-mini',
+              });
+        }
 
         let res = chatCompletion.choices[0].message.content
 

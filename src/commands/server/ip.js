@@ -5,12 +5,12 @@ import { replyNoPremission } from '../../helpers/command-helper.js';
 
 export const data = new SlashCommandBuilder()
 	.setName('ip')
-	.setDescription('Get Minecraft server ip');
+	.setDescription('Get server ip');
 
 export async function execute(interaction) {
 	if (isUser(interaction.user.id)) {
 		const ip = await publicIpv4()
-		await interaction.reply('The Minecraft Server is currently running on ' + ip);
+		await interaction.reply('The server is currently running on ' + ip);
 	} else {
 		await replyNoPremission(interaction);
 	}

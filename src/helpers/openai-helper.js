@@ -29,7 +29,8 @@ export async function queryOpenAi(apiKey, client, message, user, channel, lastMe
                         },
                         {
                             'type': 'image_url',
-                            'image_url': {'url': messageAttachment}
+                            'image_url': {'url': messageAttachment},
+                            "detail": "low"
                         }
                     ]},
                 ],

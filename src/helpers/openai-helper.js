@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+//https://platform.openai.com/docs/assistants/quickstart
+
 export async function queryOpenAi(apiKey, client, message, user, channel, lastMessage) {
     const openai = new OpenAI({
         apiKey: apiKey, 
@@ -11,9 +13,7 @@ export async function queryOpenAi(apiKey, client, message, user, channel, lastMe
     //const parentMessageId = lastMessage?.id || ""
     const userMessage = message.content
     const systemMessage = constructSystemMessage(channel, user)
-    const messageAttachment = message.attachments.values().next().value.attachment
-
-    console.log(messageAttachment)
+    const messageAttachment = message.attachments.values().next()?.value?.attachment
     try {
 
         let chatCompletion
@@ -29,8 +29,10 @@ export async function queryOpenAi(apiKey, client, message, user, channel, lastMe
                         },
                         {
                             'type': 'image_url',
-                            'image_url': {'url': messageAttachment},
-                            "detail": "low"
+                            'image_url': {
+                                'url': messageAttachment,
+                                'detail': 'low'
+                            }
                         }
                     ]},
                 ],

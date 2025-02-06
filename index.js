@@ -22,7 +22,7 @@ const client = new Client({
     ]
 })
 
-const shutdown = new CronJob('0 50 21 * * *', () => {
+const shutdown = new CronJob('0 50 20 * * *', () => {
     process.exit()
 });
 

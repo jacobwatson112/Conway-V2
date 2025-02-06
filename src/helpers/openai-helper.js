@@ -13,7 +13,7 @@ export async function queryOpenAi(apiKey, client, message, user, channel, lastMe
     //const parentMessageId = lastMessage?.id || ""
     const userMessage = message.content
     const systemMessage = constructSystemMessage(channel, user)
-    const messageAttachment = message.attachments.values().next()?.value?.attachment
+    const messageAttachment = message.attachments?.values().next()?.value?.attachment
     try {
 
         let chatCompletion

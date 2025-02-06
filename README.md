@@ -7,6 +7,8 @@ This is Conway V2, the second generation of Conway technology.
 ## prerequistes
 
 - Node v20.x.x
+- ollama
+- llama3
 
 # init the project
 

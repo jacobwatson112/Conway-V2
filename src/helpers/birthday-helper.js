@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { getChannel } from "./channels-helper.js";
-import { queryOpenAi } from "./openai-helper.js";
+import { queryOllama } from "./ollama-helper.js";
 
 export function getBirthdays(users) {
     let formattedDate = DateTime.now().toFormat('dd/MM')
@@ -24,5 +24,5 @@ export async function writeBirthdayMessage(apiKey, client, user) {
     }
     console.log('Sending Birthday message')
 
-    await queryOpenAi(apiKey, client, message, user, channel)
+    await queryOllama(apiKey, client, message, user, channel)
 }

@@ -5,9 +5,9 @@ import { commands } from './src/commands/commands.js'
 import usersJSON from "./src/json/users.json" assert { type: 'json'}
 import { getBirthdayStatus, getBirthdays, writeBirthdayMessage } from './src/helpers/birthday-helper.js'
 import { setActivity } from './src/helpers/activity-helper.js'
-import { queryOpenAi } from './src/helpers/openai-helper.js'
 import { getUser } from './src/helpers/user-helper.js'
 import { getChannel } from './src/helpers/channels-helper.js'
+import { queryOllama } from './src/helpers/ollama-helper.js'
 
 dotenv.config()
 
@@ -38,7 +38,7 @@ client.on('ready', (event) => {
     userBirthday ? setActivity(client, getBirthdayStatus(userBirthday)) : setActivity(client)
 
     if (userBirthday) {
-        writeBirthdayMessage(process.env.OPENAI_API_KEY, client, userBirthday)
+        writeBirthdayMessage(client, userBirthday)
     }
     //client.user.setActivity('GUESS WHOS BACK BITCHES', { type: ActivityType.Watching });
 })
@@ -57,7 +57,7 @@ client.on('messageCreate', async (message) => {
         if (user && channel && no === 0) {
             console.log("===== NEW MESSAGE =====")
             console.log("Sending message in channel " + channel.name)
-            lastMessage = await queryOpenAi(process.env.OPENAI_API_KEY, client, message, user, channel, lastMessage)
+            lastMessage = await queryOllama(client, message, user, channel, lastMessage)
         }
     } catch (e) {
         console.log(e)

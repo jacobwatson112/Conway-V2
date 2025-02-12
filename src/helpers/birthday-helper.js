@@ -24,5 +24,5 @@ export async function writeBirthdayMessage(client, user) {
     }
     console.log('Sending Birthday message')
 
-    await queryOllama(client, message, user, channel)
+    await queryOllama(client, [{ 'role': 'user', 'content': message }], user, channel)
 }

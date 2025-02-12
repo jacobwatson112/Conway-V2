@@ -1,23 +1,27 @@
 import ollama from 'ollama'
 
-export async function queryOllama(client, message, user, channel, lastMessage) {
+export async function queryOllama(client, messageHistory, user, channel) {
 
-    const userMessage = message.content
+    const messages = []
     const systemMessage = constructSystemMessage(channel, user)
+
+    for (let message of messageHistory) {
+        messages.push(message.msg)
+    }
 
     const response = await ollama.chat({
         messages: [
             { 'role': 'system', 'content': systemMessage },
-            { 'role': 'user', 'content': userMessage },
+            ...messages
         ],
         model: 'llama3',
-      });
+    });
 
     let res = response.message.content
     console.log(res)
     const answer = res.replace(/<think>[\s\S]*?<\/think>/g, ''); 
 
-    client.channels.cache.get(message.channelId).send(answer)
+    client.channels.cache.get(channel.id).send(answer)
     return answer
 }
 

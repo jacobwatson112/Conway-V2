@@ -8,6 +8,8 @@ import { setActivity } from './src/helpers/activity-helper.js'
 import { getUser } from './src/helpers/user-helper.js'
 import { getChannel } from './src/helpers/channels-helper.js'
 import { queryOllama } from './src/helpers/ollama-helper.js'
+import { cleanMessageHistory } from './src/helpers/date-helper.js'
+import { DateTime } from 'luxon'
 
 dotenv.config()
 
@@ -28,7 +30,7 @@ const shutdown = new CronJob('0 50 20 * * *', () => {
 
 shutdown.start();
 
-let lastMessage
+let messageHistory = []
 
 client.on('ready', (event) => {
     console.log('Anyone here got a knife?')
@@ -54,11 +56,20 @@ client.on('messageCreate', async (message) => {
         const user = getUser(usersJSON.users, message.author.id)
         const channel = getChannel(message.channelId)
         const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
+
         if (user && channel && no === 0 || (message.content.toLowerCase().includes('conway') && channel)) {
+            messageHistory = cleanMessageHistory(messageHistory);
+
+            messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'user', 'content': message.content }})
+
             console.log("===== NEW MESSAGE =====")
             console.log("Sending message in channel " + channel.name)
-            lastMessage = await queryOllama(client, message, user, channel, lastMessage)
+            const reply = await queryOllama(client, messageHistory, user, channel)
+
+            messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'assistant', 'content': reply }})
         }
+
+
     } catch (e) {
         console.log(e)
     }

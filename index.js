@@ -54,7 +54,7 @@ client.on('messageCreate', async (message) => {
         const user = getUser(usersJSON.users, message.author.id)
         const channel = getChannel(message.channelId)
         const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
-        if (user && channel && no === 0) {
+        if (user && channel && no === 0 || (message.content.toLowerCase().includes('conway') && channel)) {
             console.log("===== NEW MESSAGE =====")
             console.log("Sending message in channel " + channel.name)
             lastMessage = await queryOllama(client, message, user, channel, lastMessage)

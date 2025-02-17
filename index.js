@@ -24,7 +24,7 @@ const client = new Client({
     ]
 })
 
-const shutdown = new CronJob('0 50 20 * * *', () => {
+const shutdown = new CronJob('0 50 21 * * *', () => {
     process.exit()
 });
 
@@ -57,17 +57,20 @@ client.on('messageCreate', async (message) => {
         const channel = getChannel(message.channelId)
         const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
 
-        if (user && channel && no === 0 || (message.content.toLowerCase().includes('conway') && channel)) {
-            messageHistory = cleanMessageHistory(messageHistory);
+        if (user && channel) {
+            if (no === 0 || (message.content.toLowerCase().includes('conway'))) {
+                messageHistory = cleanMessageHistory(messageHistory);
 
-            messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'user', 'content': message.content }})
+                messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'user', 'content': message.content }})
 
-            console.log("===== NEW MESSAGE =====")
-            console.log("Sending message in channel " + channel.name)
-            const reply = await queryOllama(client, messageHistory, user, channel)
+                console.log("===== NEW MESSAGE =====")
+                console.log("Sending message in channel " + channel.name)
+                const reply = await queryOllama(client, messageHistory, user, channel)
 
-            messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'assistant', 'content': reply }})
+                messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'assistant', 'content': reply }})
+            }
         }
+
 
 
     } catch (e) {

@@ -64,7 +64,8 @@ client.on('messageCreate', async (message) => {
                 messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'user', 'content': message.content }})
 
                 console.log("===== NEW MESSAGE =====")
-                console.log("Sending message in channel " + channel.name)
+                console.log("Replying to message in channel " + channel.name)
+                console.log('Content: ' + message.content)
                 const reply = await queryOllama(client, messageHistory, user, channel)
 
                 messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'assistant', 'content': reply }})

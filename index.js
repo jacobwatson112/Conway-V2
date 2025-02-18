@@ -40,7 +40,7 @@ client.on('ready', (event) => {
     userBirthday ? setActivity(client, getBirthdayStatus(userBirthday)) : setActivity(client)
 
     if (userBirthday) {
-        writeBirthdayMessage(client, userBirthday)
+        writeBirthdayMessage(client, userBirthday, messageHistory)
     }
     //client.user.setActivity('GUESS WHOS BACK BITCHES', { type: ActivityType.Watching });
 })

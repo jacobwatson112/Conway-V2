@@ -21,6 +21,5 @@ export async function writeBirthdayMessage(client, user, messageHistory) {
     console.log('Sending Birthday message')
     
     messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'user', 'content': 'Write me a happy birthday message' }})
-
     await queryOllama(client, messageHistory, user, channel)
 }

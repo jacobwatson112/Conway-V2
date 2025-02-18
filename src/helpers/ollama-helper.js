@@ -21,7 +21,7 @@ export async function queryOllama(client, messageHistory, user, channel) {
     console.log(res)
     const answer = res.replace(/<think>[\s\S]*?<\/think>/g, ''); 
 
-    client.channels.cache.get(channel.id).send(answer)
+    client.channels.cache.get(channel.discordId).send(answer)
     return answer
 }
 

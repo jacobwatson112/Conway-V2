@@ -13,10 +13,10 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
-        await interaction.reply({ content: 'Removed this lmao', ephemeral: true })
+        await interaction.reply({ content: 'Removed this lmao', flags: 64 })
         // const message = interaction.options.getString('text') ?? undefined
         // if (message !== undefined) {
-        //     await interaction.reply({ content: 'Creating image', ephemeral: true })
+        //     await interaction.reply({ content: 'Creating image', flags: 64 })
         //     try {
         //         client.channels.cache.get(interaction.channelId).send(await queryDallE(message))
         //     }

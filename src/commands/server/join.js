@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
         if (!interaction.guild) {
-            await interaction.reply({ content: 'This command must be used in a server.', ephemeral: true });
+            await interaction.reply({ content: 'This command must be used in a server.', flags: 64 });
             return;
         }
 
@@ -20,7 +20,7 @@ export async function execute(interaction) {
             adapterCreator: interaction.guild.voiceAdapterCreator,
             selfDeaf: false,
         });
-        await interaction.reply({ content: 'Joined', ephemeral: true });
+        await interaction.reply({ content: 'Joined', flags: 64 });
 	} else {
 		await replyNoPremission(interaction);
 	}

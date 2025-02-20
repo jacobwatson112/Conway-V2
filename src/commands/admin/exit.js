@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
 	// Need to make this an admin only command
     if (isUser(interaction.user.id)) {
-        await interaction.reply({ content: 'Shutting down', ephemeral: true });
+        await interaction.reply({ content: 'Shutting down', flags: 64 });
 		process.exit()
 	} else {
 		await replyNoPremission(interaction);

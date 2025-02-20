@@ -14,7 +14,7 @@ export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
         const message = interaction.options.getString('text') ?? undefined
         message !== undefined ? setActivity(interaction.client, message) : setActivity(interaction.client)
-        await interaction.reply({ content: 'Status Changed', ephemeral: true });
+        await interaction.reply({ content: 'Status Changed', flags: 64 });
 	} else {
 		await replyNoPremission(interaction);
 	}

@@ -45,13 +45,13 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
         if (!interaction.guild) {
-            await interaction.reply({ content: 'This command must be used in a server.', ephemeral: true });
+            await interaction.reply({ content: 'This command must be used in a server.', flags: 64 });
             return;
         }
 
         const voiceChannel = interaction.member.voice.channel;
         if (!voiceChannel) {
-            await interaction.reply({ content: 'You must join a voice channel first!', ephemeral: true });
+            await interaction.reply({ content: 'You must join a voice channel first!', flags: 64 });
             return;
         }
 
@@ -67,7 +67,7 @@ export async function execute(interaction) {
         const filePath = path.join(__dirname, '../../music/soundboard', clip);
 
         if (!fs.existsSync(filePath)) {
-            await interaction.reply({ content: `Clip "${clip}" not found.`, ephemeral: true });
+            await interaction.reply({ content: `Soundboard item "${clip}" not found.`, flags: 64 });
             return;
         }
 
@@ -100,7 +100,7 @@ export async function execute(interaction) {
         player.play(resource);
 
         // Reply to the user
-        await interaction.reply({ content: `Playing clip: ${clip}`, ephemeral: true });
+        await interaction.reply({ content: `Playing: ${clip} from soundboard`, flags: 64 });
 
         // Handle stopping the audio when it's done
         player.on(AudioPlayerStatus.Idle, () => {

@@ -19,9 +19,9 @@ export async function execute(interaction) {
     
         if (userBirthday) {
             writeBirthdayMessage(process.env.OPENAI_API_KEY, interaction.client, userBirthday)
-            await interaction.reply({ content: 'User birthday message sent', ephemeral: true });
+            await interaction.reply({ content: 'User birthday message sent', flags: 64 });
         } else {
-            await interaction.reply({ content: 'No users have a birthday today', ephemeral: true });
+            await interaction.reply({ content: 'No users have a birthday today', flags: 64 });
         }
 	} else {
 		await replyNoPremission(interaction);

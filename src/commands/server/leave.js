@@ -10,15 +10,15 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
         if (!interaction.guild) {
-            await interaction.reply({ content: 'This command must be used in a server.', ephemeral: true });
+            await interaction.reply({ content: 'This command must be used in a server.', flags: 64 });
             return;
         }
         const connection = getVoiceConnection(interaction.guild.id);
         if (connection) {
             connection.destroy();
-            await interaction.reply({ content: 'Bye bye 👋', ephemeral: true });
+            await interaction.reply({ content: 'Bye bye 👋', flags: 64 });
         } else {
-            await interaction.reply({ content: 'Bruh I aint in no channel', ephemeral: true });
+            await interaction.reply({ content: 'Bruh I aint in no channel', flags: 64 });
         }
 	} else {
 		await replyNoPremission(interaction);

@@ -9,16 +9,16 @@ export const data = new SlashCommandBuilder()
 	.setName('checkbirthdays')
 	.setDescription('Checks user birthdays');
 
-export async function execute(interaction, client) {
+export async function execute(interaction) {
 	if (isUser(interaction.user.id)) {
         console.log('here')
         const userBirthday = getBirthdays(usersJSON.users)
         console.log(userBirthday)
     
-        userBirthday ? setActivity(client, getBirthdayStatus(userBirthday)) : setActivity(client)
+        userBirthday ? setActivity(interaction.client, getBirthdayStatus(userBirthday)) : setActivity(interaction.client)
     
         if (userBirthday) {
-            writeBirthdayMessage(process.env.OPENAI_API_KEY, client, userBirthday)
+            writeBirthdayMessage(process.env.OPENAI_API_KEY, interaction.client, userBirthday)
             await interaction.reply({ content: 'User birthday message sent', ephemeral: true });
         } else {
             await interaction.reply({ content: 'No users have a birthday today', ephemeral: true });

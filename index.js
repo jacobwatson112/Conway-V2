@@ -19,6 +19,7 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.MessageContent,
     ]
@@ -42,13 +43,12 @@ client.on('ready', (event) => {
     if (userBirthday) {
         writeBirthdayMessage(client, userBirthday, messageHistory)
     }
-    //client.user.setActivity('GUESS WHOS BACK BITCHES', { type: ActivityType.Watching });
 })
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
-	await commands[interaction.commandName](interaction, client)
+	await commands[interaction.commandName](interaction)
 });
 
 client.on('messageCreate', async (message) => {

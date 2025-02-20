@@ -10,10 +10,10 @@ export const data = new SlashCommandBuilder()
         option.setName('text')
             .setDescription('The message to set the status as'))
 
-export async function execute(interaction, client) {
+export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
         const message = interaction.options.getString('text') ?? undefined
-        message !== undefined ? setActivity(client, message) : setActivity(client)
+        message !== undefined ? setActivity(interaction.client, message) : setActivity(interaction.client)
         await interaction.reply({ content: 'Status Changed', ephemeral: true });
 	} else {
 		await replyNoPremission(interaction);

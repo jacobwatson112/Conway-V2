@@ -7,7 +7,7 @@ export const data = new SlashCommandBuilder()
 	.setName('exit')
 	.setDescription('Shutdown Conway')
 
-export async function execute(interaction, client) {
+export async function execute(interaction) {
 	// Need to make this an admin only command
     if (isUser(interaction.user.id)) {
         await interaction.reply({ content: 'Shutting down', ephemeral: true });

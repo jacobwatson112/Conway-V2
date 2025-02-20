@@ -11,19 +11,19 @@ export const data = new SlashCommandBuilder()
         option.setName('text')
             .setDescription('The prompt to create the image'))
 
-export async function execute(interaction, client) {
+export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
-
-        const message = interaction.options.getString('text') ?? undefined
-        if (message !== undefined) {
-            await interaction.reply({ content: 'Creating image', ephemeral: true })
-            try {
-                client.channels.cache.get(interaction.channelId).send(await queryDallE(message))
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }
+        await interaction.reply({ content: 'Removed this lmao', ephemeral: true })
+        // const message = interaction.options.getString('text') ?? undefined
+        // if (message !== undefined) {
+        //     await interaction.reply({ content: 'Creating image', ephemeral: true })
+        //     try {
+        //         client.channels.cache.get(interaction.channelId).send(await queryDallE(message))
+        //     }
+        //     catch (err) {
+        //         console.log(err)
+        //     }
+        // }
 	} else {
 		await replyNoPremission(interaction);
 	}

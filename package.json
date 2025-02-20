@@ -1,6 +1,6 @@
 {
 	"name": "Conway v2",
-	"version": "1.4.5",
+	"version": "1.4.6",
 	"description": "Conway reborn",
 	"main": "index.js",
 	"author": "Jacob Watson",

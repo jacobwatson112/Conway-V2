@@ -15,9 +15,9 @@ export const data = new SlashCommandBuilder()
             .setDescription('Clip to play')
             .setRequired(true)
             .setChoices(
-                { name: 'sleepydengnft', value: 'sleepydengnft' },
-                { name: 'Clip 2', value: 'clip2' },
-                { name: 'Clip 3', value: 'clip3' }
+                { name: 'sleepydengnft', value: 'sleepydengnft.mp3' },
+                { name: 'shhh', value: 'shhh.wav' },
+                { name: 'Thanks Mark', value: 'Thanks_Mark.mp4' }
             )
     );
 
@@ -28,14 +28,12 @@ export async function execute(interaction) {
             return;
         }
 
-        // Get the voice channel the user is in
         const voiceChannel = interaction.member.voice.channel;
         if (!voiceChannel) {
             await interaction.reply({ content: 'You must join a voice channel first!', ephemeral: true });
             return;
         }
 
-        // Join the voice channel
         const connection = joinVoiceChannel({
             channelId: voiceChannel.id,
             guildId: interaction.guild.id,
@@ -43,21 +41,37 @@ export async function execute(interaction) {
             selfDeaf: false,
         });
 
-        // Specify the path to the MP3 file or clip
-        const clip = interaction.options.getString('text') ?? undefined // You can specify different clips based on the input
+        const clip = interaction.options.getString('text') ?? undefined
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        const filePath = path.join(__dirname, '../../music/soundboard', `${clip}.mp3`); // Adjust your path to the MP3 files
+        const filePath = path.join(__dirname, '../../music/soundboard', clip);
 
         if (!fs.existsSync(filePath)) {
             await interaction.reply({ content: `Clip "${clip}" not found.`, ephemeral: true });
             return;
         }
 
-        // Create an audio resource from the MP3 file
-        const resource = createAudioResource(filePath, {
-            inputType: 'arbitrary', // Specifies that we are using raw MP3 data
+        let fileInput = filePath
+        let resource
+
+        if (filePath.endsWith('.mp4')) {
+            // If it's an MP4 file, use FFmpeg to extract audio
+            const ffmpeg = spawn('ffmpeg', [
+                '-i', filePath,            // Input file
+                '-f', 'wav',               // Output format as WAV
+                '-ar', '48000',            // Set the audio sample rate to 48kHz
+                '-ac', '2',                // Set to stereo (2 channels)
+                '-vn',                     // Don't include video stream
+                'pipe:1'                   // Output to stdout (pipe)
+            ]);
+    
+            fileInput = ffmpeg.stdout
+        } 
+
+        resource = createAudioResource(fileInput, {
+            inputType: AudioPlayerInputType.Arbitrary,
             inlineVolume: true,
-        });
+        })
+
 
         // Create the audio player and play the resource
         const player = createAudioPlayer();

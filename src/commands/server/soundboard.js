@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import ffmpegPath from 'ffmpeg-static';
 import { fileURLToPath } from 'url';
+import { spawn } from 'child_process';
 
 export const data = new SlashCommandBuilder()
 	.setName('soundboard')
@@ -15,9 +16,29 @@ export const data = new SlashCommandBuilder()
             .setDescription('Clip to play')
             .setRequired(true)
             .setChoices(
-                { name: 'sleepydengnft', value: 'sleepydengnft.mp3' },
+                { name: 'army', value: 'army.mp3' },
+                { name: 'clap', value: 'clap.mp3' },
+                { name: 'congrats', value: 'congrats.mp3' },
+                { name: 'fbi', value: 'fbi.mp3' },
+                { name: 'Fuck You', value: 'fu.mp3' },
+                { name: 'JOKES OVER', value: 'joke.mp3' },
+                { name: 'lets go', value: 'letsgo.mp3' },
+                { name: 'LTT', value: 'ltt.mp3' },
+                { name: 'LTT earrape', value: 'ltt2.mp3' },
+                { name: 'GET THE FUCK OUT OF MY ROOM IM PLAYING MINECRAFT', value: 'minecraft.mp3' },
+                { name: 'nice', value: 'nice.mp3' },
+                { name: 'ninja', value: 'ninja.mp3' },
+                { name: 'PS1', value: 'ps1.mp3' },
+                { name: 'PS2', value: 'ps2.mp3' },
                 { name: 'shhh', value: 'shhh.wav' },
-                { name: 'Thanks Mark', value: 'Thanks_Mark.mp4' }
+                { name: 'sleepydengnft', value: 'sleepydengnft.mp3' },
+                { name: 'Thanks Mark', value: 'Thanks_Mark.mp4' },
+                { name: 'im a mf train', value: 'train.mp3' },
+                { name: 'wonderful', value: 'wonderful.mp3' },
+                { name: 'xmas', value: 'xmas1.mp3' },
+                { name: 'xmas2', value: 'xmas2.mp3' },
+                { name: 'xp', value: 'xp.mp3' },
+                { name: 'zam', value: 'zam.mp3' },
             )
     );
 
@@ -68,7 +89,7 @@ export async function execute(interaction) {
         } 
 
         resource = createAudioResource(fileInput, {
-            inputType: AudioPlayerInputType.Arbitrary,
+            inputType: 'arbitrary',
             inlineVolume: true,
         })
 

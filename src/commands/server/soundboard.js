@@ -149,19 +149,11 @@ export async function execute(interaction) {
             inlineVolume: true,
         })
 
-
-        // Create the audio player and play the resource
         const player = createAudioPlayer();
         connection.subscribe(player);
         player.play(resource);
 
-        // Reply to the user
         await interaction.reply({ content: `Playing: ${clip} from soundboard`, flags: 64 });
-
-        // Handle stopping the audio when it's done
-        player.on(AudioPlayerStatus.Idle, () => {
-            connection.destroy(); // Destroy connection once done
-        });
     } else {
         await replyNoPremission(interaction);
     }

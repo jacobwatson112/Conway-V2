@@ -4,9 +4,9 @@ import { data } from './src/commands/data.js'
 
 dotenv.config()
 
-const discordToken = process.env.DISCORD_TOKEN
-const clientId = process.env.CLIENT_ID
-const guildId = process.env.GUILD_ID
+const discordToken: any = process.env.DISCORD_TOKEN
+const clientId: any = process.env.CLIENT_ID
+const guildId: any = process.env.GUILD_ID
 
 const commands = [];
 for (let c of data) {
@@ -34,7 +34,7 @@ const rest = new REST().setToken(discordToken);
             { body: commands },
         ); */
 
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+		console.log(`Successfully reloaded application (/) commands.`);
 	} catch (error) {
 		// And of course, make sure you catch and log any errors!
 		console.error(error);

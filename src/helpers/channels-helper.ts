@@ -1,6 +1,6 @@
-import channelJSON from "../json/channels.json" assert { type: 'json'}
+import channelJSON from "../json/channels.json"
 
-export function getChannel(channelId) {
+export function getChannel(channelId: string) {
     for (let channel of channelJSON.channels) {
         if (channel.id === channelId) {
             return channel

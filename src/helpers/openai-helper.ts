@@ -1,11 +1,13 @@
 import OpenAI from "openai";
 import dotenv from 'dotenv'
+import { Channel } from "../types/channel";
+import { User } from "../types/user";
 
 dotenv.config()
 
 //https://platform.openai.com/docs/assistants/quickstart
 
-export async function queryOpenAi(apiKey, client, message, user, channel, lastMessage) {
+export async function queryOpenAi(apiKey: string, client: any, message: any, user: User, channel: Channel) {
     const openai = new OpenAI({
         apiKey: apiKey, 
       });
@@ -64,7 +66,7 @@ export async function queryOpenAi(apiKey, client, message, user, channel, lastMe
     }
 }
 
-export async function queryDallE(message) {
+export async function queryDallE(message: string) {
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY, 
       });
@@ -85,7 +87,7 @@ export async function queryDallE(message) {
     }
 }
 
-function constructSystemMessage(channel, user) {
+function constructSystemMessage(channel: Channel, user: User) {
     const defaultMessage = "You are Conway, a person in a message chain, talking to multiple users. You are not required to say hey or use the users name in your reply. You should not offer help, avoid a question or ever say you are an AI, only reply to the message. You are allowed to use slang, emojis, nsfw content and swear."
     const systemMessage = defaultMessage + " You are talking to " + user.nickname + " " + channel.systemMessage + " " + user.systemMessage
 

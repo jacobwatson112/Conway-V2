@@ -1,14 +1,15 @@
-import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js'
+import { Client, Events, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 import { CronJob } from 'cron'
-import { commands } from './src/commands/commands.js'
-import usersJSON from "./src/json/users.json" assert { type: 'json'}
-import { getBirthdayStatus, getBirthdays, writeBirthdayMessage } from './src/helpers/birthday-helper.js'
-import { setActivity } from './src/helpers/activity-helper.js'
-import { getUser } from './src/helpers/user-helper.js'
-import { getChannel } from './src/helpers/channels-helper.js'
-import { queryOllama } from './src/helpers/ollama-helper.js'
-import { cleanMessageHistory } from './src/helpers/date-helper.js'
+import { commands } from './src/commands/commands'
+import usersJSON from "./src/json/users.json"
+import { getBirthdayStatus, getBirthdays, writeBirthdayMessage } from './src/helpers/birthday-helper'
+import { setActivity } from './src/helpers/activity-helper'
+import { getUser } from './src/helpers/user-helper'
+import { getChannel } from './src/helpers/channels-helper'
+import { queryOllama } from './src/helpers/ollama-helper'
+import { cleanMessageHistory } from './src/helpers/date-helper'
+import { MessageHistory } from './src/types/messageHistory'
 import { DateTime } from 'luxon'
 
 dotenv.config()
@@ -19,6 +20,7 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.MessageContent,
     ]
@@ -30,7 +32,7 @@ const shutdown = new CronJob('0 50 21 * * *', () => {
 
 shutdown.start();
 
-let messageHistory = []
+let messageHistory: MessageHistory[] = []
 
 client.on('ready', (event) => {
     console.log('Anyone here got a knife?')
@@ -42,13 +44,12 @@ client.on('ready', (event) => {
     if (userBirthday) {
         writeBirthdayMessage(client, userBirthday, messageHistory)
     }
-    //client.user.setActivity('GUESS WHOS BACK BITCHES', { type: ActivityType.Watching });
 })
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
-	await commands[interaction.commandName](interaction, client)
+	await commands[interaction.commandName as keyof typeof commands](interaction);
 });
 
 client.on('messageCreate', async (message) => {

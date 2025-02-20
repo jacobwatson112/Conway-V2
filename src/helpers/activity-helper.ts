@@ -1,7 +1,7 @@
 import { ActivityType } from "discord.js";
-import statusJSON from "../json/status.json" assert { type: 'json'}
+import statusJSON from "../json/status.json"
 
-export function setActivity(client, message = null) {
+export function setActivity(client: any, message?: string) {
     let activityType = ActivityType.Playing
     let statusText = message
 
@@ -16,7 +16,7 @@ export function setActivity(client, message = null) {
             activityType = ActivityType.Listening
         }
 
-        statusText = statusJSON[status][Math.floor(Math.random() * statusJSON[status].length)];
+        statusText = statusJSON[status as keyof typeof statusJSON][Math.floor(Math.random() * statusJSON[status as keyof typeof statusJSON].length)];
     }
     
     client.user.setActivity(statusText, { type: activityType });

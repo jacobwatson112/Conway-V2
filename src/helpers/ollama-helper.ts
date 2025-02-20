@@ -1,6 +1,9 @@
 import ollama from 'ollama'
+import { User } from '../types/user';
+import { MessageHistory } from '../types/messageHistory';
+import { Channel } from '../types/channel';
 
-export async function queryOllama(client, messageHistory, user, channel) {
+export async function queryOllama(client: any, messageHistory: MessageHistory[], user: User, channel: Channel) {
 
     const messages = []
     const systemMessage = constructSystemMessage(channel, user)
@@ -25,7 +28,7 @@ export async function queryOllama(client, messageHistory, user, channel) {
     return answer
 }
 
-function constructSystemMessage(channel, user) {
+function constructSystemMessage(channel: Channel, user: User) {
     const defaultMessage = "You are Conway, a person in a message chain, talking to multiple users. You should not offer help, avoid a question or ever say you are an AI, answers need to be less than 2000 characters, only reply to the message. You are allowed to use slang, emojis, nsfw content and swear."
     const systemMessage = defaultMessage + " You are talking to " + user.nickname + " " + channel.systemMessage + " " + user.systemMessage
 

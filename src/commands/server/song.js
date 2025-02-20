@@ -17,18 +17,18 @@ export const data = new SlashCommandBuilder()
             .setRequired(true)
             .setChoices(
                 { name: 'carl', value: 'carl.mp3' },
+                { name: 'Chug Jug', value: 'victory.mp3' },
                 { name: 'Gas Money', value: 'gas.mp3' },
                 { name: 'GTA 4', value: 'gta.mp3' },
                 { name: 'Hero', value: 'hero.mp3' },
                 { name: 'illuminatitv', value: 'illuminatitv.mp3' },
-                { name: 'Welcome to my Mine', value: 'mine.mp3' },
                 { name: 'Ram Ranch 7', value: 'RamRanch7.mp3' },
                 { name: 'Rich', value: 'rich.mp3' },
                 { name: 'Rico', value: 'rico.mp3' },
                 { name: 'Shia Labeouf Live', value: 'shia.mp3' },
                 { name: 'Sprite', value: 'sprite.mp3' },
                 { name: 'Stephen', value: 'stephen.mp3' },
-                { name: 'Chug Jug', value: 'victory.mp3' },
+                { name: 'Welcome to my Mine', value: 'mine.mp3' },
             )
     );
 
@@ -54,7 +54,7 @@ export async function execute(interaction) {
 
         const clip = interaction.options.getString('text') ?? undefined
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        const filePath = path.join(__dirname, '../../music/song', clip);
+        const filePath = path.join(__dirname, '../../music/songs', clip);
 
         if (!fs.existsSync(filePath)) {
             await interaction.reply({ content: `Song "${clip}" not found.`, flags: 64 });

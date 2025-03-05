@@ -1,6 +1,6 @@
 {
 	"name": "Conway v2",
-	"version": "1.4.8",
+	"version": "1.5.0",
 	"description": "Conway reborn",
 	"main": "index.js",
 	"author": "Jacob Watson",
@@ -11,11 +11,9 @@
 		"deploy-commands": "node ./deploy-commands.js"
 	},
 	"dependencies": {
-		"@discord-player/extractor": "^7.1.0",
 		"@discordjs/opus": "^0.10.0",
 		"@discordjs/voice": "^0.18.0",
 		"cron": "^3.1.7",
-		"discord-player": "^7.1.0",
 		"discord.js": "^14.18.0",
 		"dotenv": "^16.3.1",
 		"ffmpeg-static": "^5.2.0",
@@ -23,6 +21,7 @@
 		"ollama": "^0.5.12",
 		"openai": "^4.52.7",
 		"opusscript": "^0.0.8",
-		"public-ip": "^6.0.1"
+		"public-ip": "^6.0.1",
+		"youtube-dl-exec": "^3.0.16"
 	}
 }

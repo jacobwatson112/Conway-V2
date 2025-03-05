@@ -2,5 +2,4 @@
 .env
 users.json
 channels.json
-/src/music/songs
-/src/music/soundboard
+/src/music

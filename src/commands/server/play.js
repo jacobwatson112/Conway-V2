@@ -2,48 +2,81 @@ import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { isUser } from '../../helpers/user-helper.js';
 import { replyNoPremission } from '../../helpers/command-helper.js';
 import { AudioPlayerStatus, joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, StreamType } from '@discordjs/voice';
-import { useMainPlayer } from 'discord-player';
-import { DefaultExtractors } from '@discord-player/extractor'
+import youtubedl from "youtube-dl-exec";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from 'url';
 
 export const data = new SlashCommandBuilder()
 	.setName('play')
 	.setDescription('Play a youtube link')
     .addStringOption(option => 
         option.setName('text')
-            .setDescription('URL'));
+            .setDescription('Youtube URL'));
 
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
-        const player = useMainPlayer();
-        // const channel = interaction.member.voice.channel;
-        // if (interaction.member.voice.channel) {
-        //     const query = 'https://www.youtube.com/watch?v=qUk1ZoCGqsA'
+        const __dirname = path.dirname(fileURLToPath(import.meta.url));
+        const downloadFolder = path.join(__dirname, "../../music/downloads");
+        const filePath = path.join(downloadFolder, "file.mp3");
 
-        //     // const connection = joinVoiceChannel({
-        //     //     channelId: interaction.member.voice.channel.id,
-        //     //     guildId: interaction.guild.id,
-        //     //     adapterCreator: interaction.guild.voiceAdapterCreator,
-        //     // });
+        if (!fs.existsSync(downloadFolder)) {
+            fs.mkdirSync(downloadFolder, { recursive: true });
+        }
+        if (fs.existsSync(filePath)) {
+            console.log("File already exists, replacing...");
+            fs.unlinkSync(filePath);
+        }
 
-        //     await interaction.deferReply();
- 
-        //     try {
-        //       const { track } = await player.play(channel, query, {
-        //         nodeOptions: {
-        //           // nodeOptions are the options for guild node (aka your queue in simple word)
-        //           metadata: interaction, // we can access this metadata object using queue.metadata later on
-        //         },
-        //       });
-           
-        //       return interaction.followUp(`**${track.title}** enqueued!`);
-        //     } catch (e) {
-        //       // let's return error if something failed
-        //       return interaction.followUp(`Something went wrong: ${e}`);
-        //     }
+        if (!interaction.guild) {
+            await interaction.reply({ content: 'This command must be used in a server.', flags: 64 });
+            return;
+        }
 
-        // } else {
-        //     await interaction.reply({ content: 'You need to join a voice channel first!', flags: 64 });
-        // }
+        const voiceChannel = interaction.member.voice.channel;
+        if (!voiceChannel) {
+            await interaction.reply({ content: 'You must join a voice channel first!', flags: 64 });
+            return;
+        }
+
+        try {
+            const url = interaction.options.getString('text') ?? undefined
+            console.log("Downloading...");
+            await interaction.reply({ content: `Downloading ${url} I'll join in a second.`, flags: 64 });
+    
+            await youtubedl(url, {
+                output: path.join(downloadFolder, "file.%(ext)s"), // Save with title
+                extractAudio: true, // Extract only audio
+                audioFormat: "mp3", // Convert to MP3
+                audioQuality: "320K", // Highest audio quality
+            });
+    
+            console.log("Download complete!");
+        } catch (error) {
+            await interaction.reply({content: `Sorry buddy, this ain't working.`, flags: 64})
+        }
+
+        const connection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: interaction.guild.id,
+            adapterCreator: interaction.guild.voiceAdapterCreator,
+            selfDeaf: false,
+        });
+
+        if (!fs.existsSync(filePath)) {
+            console.log('File not found')
+            return;
+        }
+
+        const resource = createAudioResource(filePath, {
+            inputType: 'arbitrary',
+            inlineVolume: true,
+        })
+
+        const player = createAudioPlayer();
+        connection.subscribe(player);
+        player.play(resource);
+        console.log('Done!')
     } else {
         await replyNoPremission(interaction);
     }

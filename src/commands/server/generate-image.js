@@ -3,6 +3,7 @@ import { setActivity } from '../../helpers/activity-helper.js';
 import { isUser } from '../../helpers/user-helper.js';
 import { replyNoPremission } from '../../helpers/command-helper.js';
 import { queryDallE } from '../../helpers/openai-helper.js';
+import { fileURLToPath } from 'url';
 
 export const data = new SlashCommandBuilder()
 	.setName('image')
@@ -13,6 +14,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
+        const __dirname = path.dirname(fileURLToPath(import.meta.url));
         const noFixError = path.join(__dirname, '../../images/error', 'no_fix_error.png');
         await interaction.reply({ files: [new AttachmentBuilder(noFixError)], content: 'Removed this lmao' });
         // const message = interaction.options.getString('text') ?? undefined

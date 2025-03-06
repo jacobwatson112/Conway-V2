@@ -4,7 +4,6 @@ import { replyNoPremission } from '../../helpers/command-helper.js';
 import { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } from '@discordjs/voice';
 import fs from 'fs';
 import path from 'path';
-import ffmpegPath from 'ffmpeg-static';
 import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
 

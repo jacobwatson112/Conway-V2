@@ -2,6 +2,7 @@ import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js';
 import { isUser } from '../../helpers/user-helper.js';
 import { replyNoPremission } from '../../helpers/command-helper.js';
 import path from "path";
+import { fileURLToPath } from 'url';
 
 export const data = new SlashCommandBuilder()
 	.setName('q')

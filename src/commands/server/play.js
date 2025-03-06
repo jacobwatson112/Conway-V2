@@ -1,7 +1,7 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, AttachmentBuilder } from 'discord.js';
 import { isUser } from '../../helpers/user-helper.js';
 import { replyNoPremission } from '../../helpers/command-helper.js';
-import { AudioPlayerStatus, joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, StreamType } from '@discordjs/voice';
+import { joinVoiceChannel, createAudioPlayer, createAudioResource } from '@discordjs/voice';
 import youtubedl from "youtube-dl-exec";
 import path from "path";
 import fs from "fs";
@@ -16,67 +16,97 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
+        const regex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(\S*)?$/;
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
         const downloadFolder = path.join(__dirname, "../../music/downloads");
-        const filePath = path.join(downloadFolder, "file.mp3");
+        const databasePath = path.join(downloadFolder, "downloads.json");
+        const url = interaction.options.getString('text') ?? undefined
+        const voiceChannel = interaction.member.voice.channel;
+        let downloadedVideos = {};
 
+        // File Checks
         if (!fs.existsSync(downloadFolder)) {
             fs.mkdirSync(downloadFolder, { recursive: true });
         }
-        if (fs.existsSync(filePath)) {
-            console.log("File already exists, replacing...");
-            fs.unlinkSync(filePath);
+        if (fs.existsSync(databasePath)) {
+            downloadedVideos = JSON.parse(fs.readFileSync(databasePath, "utf8"));
         }
 
+        // Error Checks
         if (!interaction.guild) {
-            await interaction.reply({ content: 'This command must be used in a server.', flags: 64 });
+            await interaction.reply({ content: `can you not dm me`, flags: 64 });
             return;
         }
-
-        const voiceChannel = interaction.member.voice.channel;
+        if (!url || !regex.test(url)) {
+            const urlError = path.join(__dirname, '../../images/error', 'url_error.png');
+            await interaction.reply({ files: [new AttachmentBuilder(urlError)], content: 'Bruh wtf is this link.', flags: 64 });
+            return;
+        }
         if (!voiceChannel) {
-            await interaction.reply({ content: 'You must join a voice channel first!', flags: 64 });
+            const joinError = path.join(__dirname, '../../images/error', 'join_channel_error.png');
+            await interaction.reply({ files: [new AttachmentBuilder(joinError)], content: `My brother, you're not even in a vc`, flags: 64 });
             return;
         }
 
+        // Download from Youtube
         try {
-            const url = interaction.options.getString('text') ?? undefined
-            console.log("Downloading...");
-            await interaction.reply({ content: `Downloading ${url} I'll join in a second.`, flags: 64 });
-    
-            await youtubedl(url, {
-                output: path.join(downloadFolder, "file.%(ext)s"), // Save with title
-                extractAudio: true, // Extract only audio
-                audioFormat: "mp3", // Convert to MP3
-                audioQuality: "320K", // Highest audio quality
+            console.log("Checking for existing download...");
+
+            let videoId;
+            if (downloadedVideos[url]) {
+                videoId = downloadedVideos[url];
+                console.log("Video already downloaded.");
+                await interaction.reply({ content: `Playing ${url}`, flags: 64 });
+            } else {
+                console.log("Downloading new video...");
+                await interaction.reply({ content: `Downloading ${url}, I'll join in a second.`, flags: 64 });
+
+                // Get video ID using youtube-dl
+                const info = await youtubedl(url, { dumpSingleJson: true });
+                videoId = info.id;
+
+                // Download and save as videoId.mp3
+                await youtubedl(url, {
+                    output: path.join(downloadFolder, `${videoId}.%(ext)s`),
+                    extractAudio: true,
+                    audioFormat: "mp3",
+                    audioQuality: "320K",
+                });
+
+                // Update the database
+                downloadedVideos[url] = videoId;
+                fs.writeFileSync(databasePath, JSON.stringify(downloadedVideos, null, 2));
+            }
+
+            // Play the downloaded file
+            const filePath = path.join(downloadFolder, `${videoId}.mp3`);
+            if (!fs.existsSync(filePath)) {
+                console.log("File not found after download.");
+                return;
+            }
+
+            const connection = joinVoiceChannel({
+                channelId: voiceChannel.id,
+                guildId: interaction.guild.id,
+                adapterCreator: interaction.guild.voiceAdapterCreator,
+                selfDeaf: false,
             });
-    
-            console.log("Download complete!");
+
+            const resource = createAudioResource(filePath, {
+                inputType: "arbitrary",
+                inlineVolume: true,
+            });
+
+            const player = createAudioPlayer();
+            connection.subscribe(player);
+            player.play(resource);
+            console.log("Playing audio!");
+
         } catch (error) {
-            await interaction.reply({content: `Sorry buddy, this ain't working.`, flags: 64})
+            console.error("Error:", error);
+            const playError = path.join(__dirname, '../../images/error', 'play_error.png');
+            await interaction.reply({ files: [new AttachmentBuilder(playError)], content: `Sorry buddy, this ain't working.`, flags: 64 });
         }
-
-        const connection = joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: interaction.guild.id,
-            adapterCreator: interaction.guild.voiceAdapterCreator,
-            selfDeaf: false,
-        });
-
-        if (!fs.existsSync(filePath)) {
-            console.log('File not found')
-            return;
-        }
-
-        const resource = createAudioResource(filePath, {
-            inputType: 'arbitrary',
-            inlineVolume: true,
-        })
-
-        const player = createAudioPlayer();
-        connection.subscribe(player);
-        player.play(resource);
-        console.log('Done!')
     } else {
         await replyNoPremission(interaction);
     }

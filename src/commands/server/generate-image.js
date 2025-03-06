@@ -13,7 +13,8 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
-        await interaction.reply({ content: 'Removed this lmao', flags: 64 })
+        const noFixError = path.join(__dirname, '../../images/error', 'no_fix_error.png');
+        await interaction.reply({ files: [new AttachmentBuilder(noFixError)], content: 'Removed this lmao' });
         // const message = interaction.options.getString('text') ?? undefined
         // if (message !== undefined) {
         //     await interaction.reply({ content: 'Creating image', flags: 64 })

@@ -4,6 +4,7 @@ import { data as join } from './server/join.js'
 import { data as leave } from './server/leave.js'
 import { data as play } from './server/play.js'
 import { data as ping } from './test/ping.js'
+import { data as q } from './server/q.js'
 import { data as song } from './server/song.js'
 import { data as sb } from './server/soundboard.js'
 import { data2 as sb2 } from './server/soundboard.js'
@@ -19,6 +20,7 @@ export const data = [
 	leave,
 	play,
 	ping,
+	q,
 	song,
 	sb,
 	sb2,

@@ -4,6 +4,7 @@ import { execute as join } from './server/join.js'
 import { execute as leave } from './server/leave.js'
 import { execute as play } from './server/play.js'
 import { execute as ping} from './test/ping.js'
+import { execute as q } from './server/q.js'
 import { execute as song } from './server/song.js'
 import { execute as sb } from './server/soundboard.js'
 import { execute as sb2 } from './server/soundboard.js'
@@ -19,6 +20,7 @@ export const commands = {
 	leave,
 	play,
 	ping,
+	q,
 	song,
 	sb,
 	sb2,

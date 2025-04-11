@@ -8,7 +8,7 @@ This is Conway V2, the second generation of Conway technology.
 
 - Node v20.x.x
 - ollama
-- llama3
+- gemma3:4b
 - ffmpeg
 
 # init the project

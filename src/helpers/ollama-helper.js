@@ -14,8 +14,10 @@ export async function queryOllama(client, messageHistory, user, channel) {
             { 'role': 'system', 'content': systemMessage },
             ...messages
         ],
-        model: 'llama3',
+        model: 'gemma3:4b',
     });
+
+    //llama3
 
     let res = response.message.content
     console.log(res)

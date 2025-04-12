@@ -10,6 +10,7 @@ import { getChannel } from './src/helpers/channels-helper.js'
 import { queryOllama } from './src/helpers/ollama-helper.js'
 import { cleanMessageHistory } from './src/helpers/date-helper.js'
 import { DateTime } from 'luxon'
+import { updateUserScore } from './src/helpers/score-helper.js'
 
 dotenv.config()
 
@@ -72,7 +73,9 @@ client.on('messageCreate', async (message) => {
             }
         }
 
-
+        if (user) {
+            updateUserScore(message)
+        }
 
     } catch (e) {
         console.log(e)

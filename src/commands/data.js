@@ -14,6 +14,9 @@ import { data as exit } from './admin/exit.js'
 import { data as image } from './server/generate-image.js'
 import { data as useradd } from './user/add-user.js'
 import { data as useredit } from './user/edit-user.js'
+import { data as usereditsystem } from './user/edit-system-message.js'
+import { data as score } from './user/get-score.js'
+import { data as topscore } from './user/get-top-scores.js'
 
 export const data = [
 	checkBirthdays,
@@ -32,4 +35,7 @@ export const data = [
 	image,
 	useradd,
 	useredit,
+	usereditsystem,
+	score,
+	topscore,
 ]

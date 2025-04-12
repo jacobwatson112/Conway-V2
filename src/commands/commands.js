@@ -14,6 +14,9 @@ import { execute as exit } from './admin/exit.js'
 import { execute as image } from './server/generate-image.js'
 import { execute as useradd } from './user/add-user.js'
 import { execute as useredit } from './user/edit-user.js'
+import { execute as usereditsystem } from './user/edit-system-message.js'
+import { execute as score } from './user/get-score.js'
+import { execute as topscore } from './user/get-top-scores.js'
 
 export const commands = {
 	checkbirthdays,
@@ -32,4 +35,7 @@ export const commands = {
 	image,
 	useradd,
 	useredit,
+	usereditsystem,
+	score,
+	topscore,
 }

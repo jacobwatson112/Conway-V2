@@ -53,7 +53,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.on('messageCreate', async (message) => {
     try {
-        const user = getUser(usersJSON.users, message.author.id)
+        const user = getUser(message.author.id)
         const channel = getChannel(message.channelId)
         const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
 

@@ -39,8 +39,17 @@ export async function updateUserScore(message) {
             user.xp -= xpNeeded;
             user.level += 1;
 
-            // Optional: notify level up in a specific channel or console
-            console.log(`${user.firstName ?? user.id} leveled up to ${user.level}!`);
+            const levelUpChannelId = '709945199521955871';
+            const levelUpChannel = await message.client.channels.fetch(levelUpChannelId).catch(() => null);
+            
+            if (levelUpChannel && levelUpChannel.isTextBased()) {
+                const msg = `HOLY COW, YOUR PENIS IS GIGANTIC. GIGANTIC.\n` +
+                            `IT'S LITERALLY THE GAYEST THING IN THE AREA.\n` +
+                            `IT'S LEVEL ${user.level}, LOTS OF BRANCHES ON <@${user.id}>'s PENIS\n` +
+                            `YOUR TRULY BLESSED\nCONGRATS 🎉`;
+            
+                levelUpChannel.send(msg);
+            }
         }
 
         await fs.promises.writeFile(filePath, JSON.stringify(json, null, 4), 'utf8');

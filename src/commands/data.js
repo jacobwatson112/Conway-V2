@@ -12,6 +12,8 @@ import { data3 as sb3 } from './server/soundboard.js'
 import { data as status } from './server/status.js'
 import { data as exit } from './admin/exit.js'
 import { data as image } from './server/generate-image.js'
+import { data as useradd } from './user/add-user.js'
+import { data as useredit } from './user/edit-user.js'
 
 export const data = [
 	checkBirthdays,
@@ -27,5 +29,7 @@ export const data = [
 	sb3,
     status,
 	exit,
-	image
+	image,
+	useradd,
+	useredit,
 ]

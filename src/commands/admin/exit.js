@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { setActivity } from '../../helpers/activity-helper.js';
-import { isUser } from '../../helpers/user-helper.js';
+import { isAdminUser } from '../../helpers/user-helper.js';
 import { replyNoPremission } from '../../helpers/command-helper.js';
 
 export const data = new SlashCommandBuilder()
@@ -8,8 +7,7 @@ export const data = new SlashCommandBuilder()
 	.setDescription('Shutdown Conway')
 
 export async function execute(interaction) {
-	// Need to make this an admin only command
-    if (isUser(interaction.user.id)) {
+    if (isAdminUser(interaction.user.id)) {
         await interaction.reply({ content: 'Shutting down', flags: 64 });
 		process.exit()
 	} else {

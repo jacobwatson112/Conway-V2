@@ -12,6 +12,8 @@ import { execute as sb3 } from './server/soundboard.js'
 import { execute as status } from './server/status.js'
 import { execute as exit } from './admin/exit.js'
 import { execute as image } from './server/generate-image.js'
+import { execute as useradd } from './user/add-user.js'
+import { execute as useredit } from './user/edit-user.js'
 
 export const commands = {
 	checkbirthdays,
@@ -28,4 +30,6 @@ export const commands = {
 	status,
 	exit,
 	image,
+	useradd,
+	useredit,
 }

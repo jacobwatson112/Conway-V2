@@ -1,3 +1,4 @@
+import { data as about } from './admin/about.js'
 import { data as checkBirthdays } from './server/checkBirthdays.js'
 import { data as ip } from './server/ip.js'
 import { data as join } from './server/join.js'
@@ -19,6 +20,7 @@ import { data as score } from './user/get-score.js'
 import { data as topscore } from './user/get-top-scores.js'
 
 export const data = [
+	about,
 	checkBirthdays,
 	ip,
 	join,

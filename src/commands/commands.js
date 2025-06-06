@@ -1,3 +1,4 @@
+import { execute as about } from './admin/about.js'
 import { execute as checkbirthdays } from './server/checkBirthdays.js'
 import { execute as ip } from './server/ip.js'
 import { execute as join } from './server/join.js'
@@ -19,6 +20,7 @@ import { execute as score } from './user/get-score.js'
 import { execute as topscore } from './user/get-top-scores.js'
 
 export const commands = {
+	about,
 	checkbirthdays,
 	ip,
 	join,

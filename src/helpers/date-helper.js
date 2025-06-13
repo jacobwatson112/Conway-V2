@@ -5,5 +5,5 @@ export function cleanMessageHistory(messageHistory) {
 
     return messageHistory.filter(message => 
         DateTime.fromMillis(message.timestamp) >= tenMinutesAgo
-    )
+    ).slice(-10)
 }

@@ -59,17 +59,23 @@ client.on('messageCreate', async (message) => {
         const no = channel?.odds ? Math.floor(Math.random() * channel.odds) : 1
 
         if (user && channel) {
-            if (no === 0 || (message.content.toLowerCase().includes('conway'))) {
+            const alwaysReply = message.content.toLowerCase().includes('conway' || '<@818647774823317514>')
+            if (no === 0 || alwaysReply) {
                 messageHistory = cleanMessageHistory(messageHistory);
-
                 messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'user', 'content': message.content }})
+                let systemMessageCtx = ''
+
+                if (message.content.toLowerCase().includes('<@818647774823317514>')) {
+                    systemMessageCtx = "You have been manually pinged, you don't like it when users @ you and you should tell them not to do this."
+                }
 
                 console.log("===== NEW MESSAGE =====")
                 console.log("Replying to message in channel " + channel.name)
                 console.log('Content: ' + message.content)
-                const reply = await queryOllama(client, messageHistory, user, channel)
+                const reply = await queryOllama(client, messageHistory, user, channel, systemMessageCtx)
 
                 messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'assistant', 'content': reply }})
+
             }
         }
 

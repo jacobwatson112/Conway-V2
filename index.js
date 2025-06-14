@@ -8,9 +8,10 @@ import { setActivity } from './src/helpers/activity-helper.js'
 import { getUser } from './src/helpers/user-helper.js'
 import { getChannel } from './src/helpers/channels-helper.js'
 import { queryOllama } from './src/helpers/ollama-helper.js'
-import { cleanMessageHistory } from './src/helpers/date-helper.js'
+import { addMessageHistory, cleanMessageHistory } from './src/helpers/history-helper.js'
 import { DateTime } from 'luxon'
 import { updateUserScore } from './src/helpers/score-helper.js'
+import { setMood } from './src/helpers/mood-helper.js'
 
 dotenv.config()
 
@@ -32,8 +33,6 @@ const shutdown = new CronJob('0 50 21 * * *', () => {
 
 shutdown.start();
 
-let messageHistory = []
-
 client.on('ready', (event) => {
     console.log('Anyone here got a knife?')
     const userBirthday = getBirthdays(usersJSON.users)
@@ -42,8 +41,9 @@ client.on('ready', (event) => {
     userBirthday ? setActivity(client, getBirthdayStatus(userBirthday)) : setActivity(client)
 
     if (userBirthday) {
-        writeBirthdayMessage(client, userBirthday, messageHistory)
+        writeBirthdayMessage(client, userBirthday)
     }
+    setMood()
 })
 
 client.on(Events.InteractionCreate, async interaction => {
@@ -61,8 +61,9 @@ client.on('messageCreate', async (message) => {
         if (user && channel) {
             const alwaysReply = message.content.toLowerCase().includes('conway' || '<@818647774823317514>')
             if (no === 0 || alwaysReply) {
-                messageHistory = cleanMessageHistory(messageHistory);
-                messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'user', 'content': message.content }})
+                cleanMessageHistory();
+                addMessageHistory('user', message.content)
+                
                 let systemMessageCtx = ''
 
                 if (message.content.toLowerCase().includes('<@818647774823317514>')) {
@@ -72,10 +73,9 @@ client.on('messageCreate', async (message) => {
                 console.log("===== NEW MESSAGE =====")
                 console.log("Replying to message in channel " + channel.name)
                 console.log('Content: ' + message.content)
-                const reply = await queryOllama(client, messageHistory, user, channel, systemMessageCtx)
+                const reply = await queryOllama(client, user, channel, systemMessageCtx)
 
-                messageHistory.push({timestamp: DateTime.now().toMillis(), msg: { 'role': 'assistant', 'content': reply }})
-
+                addMessageHistory('assistant', reply)
             }
         }
 

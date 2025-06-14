@@ -11,6 +11,7 @@ export async function execute(interaction) {
     if (isUser(interaction.user.id)) {
         resetMessageHistory()
 
+        console.log("===== MANUALLY RESET MESSAGE HISTORY =====")
         await interaction.reply({ content: 'Message History Reset', flags: 64 });
     } else {
         await replyNoPremission(interaction);
